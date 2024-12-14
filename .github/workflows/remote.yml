@@ -17,6 +17,7 @@ jobs:
         with:
           submodules: recursive
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
       - name: Update Submodules
         run: |
@@ -27,4 +28,4 @@ jobs:
       - name: Commit and Push Changes
         run: |
           git add .
-          git diff --staged --quiet || (git commit -m "Auto update submodules - $(date '+%Y-%m-%d')" && git push)
+          git diff --staged --quiet || (git commit -m "Auto update submodules - $(date '+%Y-%m-%d')" && git pull --rebase && git push)
