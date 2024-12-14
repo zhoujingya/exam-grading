@@ -2,9 +2,9 @@ name: GitHub Classroom Workflow
 
 on:
   push:
-    branches: [ main,dev ]
-    paths-ignore:
-      - 'README.md'
+    branches:
+      - main
+      - dev
   pull_request:
     branches: [ main ]
   workflow_dispatch:
@@ -51,7 +51,7 @@ jobs:
         else
           echo "::set-output name=run_cxx::false"
         fi
-        if [ -d "TinyInfiniTensor" ]; then 
+        if [ -d "TinyInfiniTensor" ]; then
           echo "::set-output name=run_project1::true"
         else
           echo "::set-output name=run_project1::false"
@@ -90,7 +90,7 @@ jobs:
     - name: Copy exercises directory to project root
       run: cp -r rustlings/exercises .
     - name: Run tests for rustlings
-    #  
+    #
       run: cargo test --test cicv --verbose
       continue-on-error: true
     - uses: yfblock/os-autograding@master
@@ -222,7 +222,7 @@ jobs:
           --argjson score "$total_succeeds" \
           --argjson totalScore "$total_exercations" \
           '{channel: $channel, courseId: $courseId, ext: $ext, name: $name, score: $score, totalScore: $totalScore}')
-          
+
         # 保存新的 JSON 文件
         echo "$new_json" > $summary_file
 
@@ -240,7 +240,7 @@ jobs:
           -H "token: $TOKEN"\
           -d "$(cat $summary_file)" \
           -v
-  TinyInfiniTensor:  
+  TinyInfiniTensor:
     name: TinyInfiniTensor Autograding
     needs: initialize
     if: ${{ needs.initialize.outputs.run_project1 == 'true' }}
@@ -481,7 +481,7 @@ jobs:
           --argjson score "$total_succeeds" \
           --argjson totalScore "$total_exercations" \
           '{channel: $channel, courseId: $courseId, ext: $ext, name: $name, score: $score, totalScore: $totalScore}')
-          
+
         # 保存新的 JSON 文件
         echo "$new_json" > $summary_file
 
