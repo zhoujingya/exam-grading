@@ -1,10 +1,6 @@
 name: Auto Update Submodules
 
 on:
-  push:
-    branches:
-      - main
-      - dev
   schedule:
     - cron: '0 16 * * *'  # UTC 16:00 = CST (China) 00:00
   workflow_dispatch:  # Allow manual trigger
@@ -21,11 +17,19 @@ jobs:
 
       - name: Update Submodules
         run: |
-          git config --global user.name 'GitHub Actions Bot'
+          git config --global user.name 'Bot'
           git config --global user.email 'actions@github.com'
           git submodule update --remote --recursive
 
       - name: Commit and Push Changes
         run: |
           git add .
-          git diff --staged --quiet || (git commit -m "Auto update submodules - $(date '+%Y-%m-%d')" && git pull --rebase && git push)
+          # Check if there are any changes in submodules
+          if git diff --staged --quiet; then
+            echo "No changes in submodules, skipping commit and push"
+          else
+            echo "Changes detected in submodules, proceeding with commit and push"
+            git commit -m "Auto update submodules - $(date '+%Y-%m-%d')"
+            git pull --rebase
+            git push
+          fi
